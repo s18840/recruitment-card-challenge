@@ -1,0 +1,459 @@
+@keyframes slide-in-right-rotate {
+  0% {
+    opacity: 0;
+    transform: translateX(100%) rotate(30deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateX(100%) rotate(15deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes flip-card {
+  0% {
+    transform: rotateY(0);
+  }
+  100% {
+    transform: rotateY(180deg);
+  }
+}
+
+@keyframes flip-card-back {
+  0% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.container {
+  background-color: #e1eefe;
+  padding: 20px;
+  position: relative;
+
+  .border-active {
+    border: 1px solid white;
+    border-radius: 10px;
+  }
+
+  .logo-appear {
+    animation: slideOut 0.3s forwards;
+  }
+
+  .logo-disappear {
+    animation: slideIn 0.3s forwards;
+  }
+
+  .card__preview {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: auto;
+    max-width: 500px;
+    z-index: 10;
+
+    .background__image__container {
+      overflow: hidden;
+
+      .background {
+        max-height: 323px;
+        border-radius: 20px;
+      }
+    }
+
+    .card__preview__front,
+    .card__preview__back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .card__preview__front {
+      z-index: 2;
+      transform: rotateY(0deg);
+    }
+
+    .card__preview__back {
+      background: #3a3a3a;
+      color: white;
+      z-index: 1;
+      transform: rotateY(180deg);
+      transform-style: preserve-3d;
+
+      .back__content {
+        .strip {
+          background: black;
+          height: 50px;
+          margin-bottom: 20px;
+          position: absolute;
+          display: flex;
+          align-items: center;
+          top: 40px;
+          width: 100%;
+          font-size: 42px;
+          letter-spacing: 0.16px;
+          color: white;
+          overflow: hidden;
+        }
+
+        .cvv__container {
+          position: absolute;
+          top: 110px;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+
+          .cvv__span {
+            display: flex;
+            align-items: flex-end;
+            flex-direction: row-reverse;
+            padding: 5px 40px 5px 20px;
+          }
+
+          .cvv__preview__container {
+            color: black;
+            display: flex;
+            align-items: flex-end;
+            flex-direction: row-reverse;
+            padding: 5px 40px 5px 20px;
+            width: 100%;
+            height: 45px;
+            box-sizing: border-box;
+            padding: 0px 20px;
+
+            .cvv__preview {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                background-color: white;
+                width: 100%;
+                height: 45px;
+                border-radius: 5px;
+                padding-right: 20px;
+            }
+          }
+        }
+        .card__content__images__container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+    
+        
+            #visaBack {
+              display: block;
+              position: absolute;
+              top: 230px;
+              right: 30px;
+              width: 80px;
+              height: auto;
+            }
+        
+            .logo {
+              display: none;
+              position: absolute;
+              top: 230px;
+              right: 30px;
+              width: 80px;
+              height: auto;
+            }
+        }
+      }
+    }
+
+    &.flipped .card__preview__front {
+      transform: rotateY(180deg);
+    }
+
+    &.flipped .card__preview__back {
+      transform: rotateY(
+        360deg
+      );
+    }
+  }
+
+  .card__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+
+    .chip {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      width: 80px;
+      height: auto;
+    }
+
+    #visa {
+      display: block;
+      position: absolute;
+      top: 35px;
+      right: 30px;
+      width: 80px;
+      height: auto;
+    }
+
+    .logo {
+      display: none;
+      position: absolute;
+      top: 35px;
+      right: 30px;
+      width: 80px;
+      height: auto;
+    }
+
+    .card__preview__number {
+      position: relative;
+      display: flex;
+      align-items: center;
+      top: 130px;
+      width: 100%;
+      font-size: 42px;
+      padding: 5px 0px 5px 5px;
+      letter-spacing: 0.16px;
+      color: white;
+      overflow: hidden;
+
+      .digit {
+        position: relative;
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        text-align: center;
+        transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+      }
+
+      .digit.animate-appear {
+        animation: appear 0.3s forwards;
+      }
+
+      .digit.animate-disappear {
+        animation: disappear 0.3s forwards;
+      }
+    }
+
+    .card__preview__details__container {
+      position: relative;
+      top: 170px;
+      display: flex;
+      justify-content: space-between;
+
+      .card__preview__details__holder {
+        gap: 5px;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        width: 100%;
+      }
+    }
+
+    .card__preview__details.holder {
+      font-size: 14px;
+      color: rgb(197, 197, 197);
+    }
+
+    .card__preview__details.date {
+      font-size: 14px;
+      color: rgb(197, 197, 197);
+    }
+
+    .card__preview__holder {
+      font-size: 16px;
+      color: white;
+      text-transform: uppercase;
+
+      .letter {
+        display: inline-block;
+        transition: transform 0.3s, opacity 0.3s;
+      }
+
+      .letter.animate {
+        animation: slide-in-right-rotate 0.3s forwards ease-in-out;
+      }
+    }
+
+    .card__preview__details__expiration {
+      gap: 5px;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+
+      .card__expiration__date {
+        font-size: 16px;
+        color: white;
+
+        .expiration__month,
+        .expiration__year {
+          text-align: center;
+          animation-duration: 0.5s;
+          animation-fill-mode: forwards;
+          transition: opacity 0.5s ease;
+        }
+
+        .animate-appear {
+          animation-name: slideIn;
+        }
+
+        .animate-disappear {
+          animation-name: slideOut;
+        }
+      }
+    }
+  }
+
+  .card__container {
+    position: relative;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    margin-top: 150px;
+    background: white;
+    padding: 200px 30px 20px 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    max-width: 600px;
+
+    label {
+      display: none;
+    }
+
+    .card__form {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+
+      input {
+        line-height: 2.15;
+        padding-left: 10px;
+        border-radius: 5px;
+        outline: none !important;
+        border: 1px solid #b2b2b2;
+
+        &:focus-visible {
+          outline: none !important;
+          border: 1px solid #5e96d2;
+          box-shadow: 0 0 5px #9f9fa0;
+        }
+      }
+
+      .card__details {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+
+        .card__details__container {
+          display: flex;
+          justify-content: space-between;
+
+          select {
+            width: 100px;
+            padding-left: 10px;
+            border-radius: 5px;
+            outline: none !important;
+            border: 1px solid #b2b2b2;
+            height: 35px;
+            line-height: 35px;
+          }
+
+          .card__details__month {
+            gap: 7px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+          }
+
+          .card__details__year {
+            gap: 7px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+          }
+
+          .card__details__cvv {
+            gap: 7px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+          }
+        }
+      }
+
+      .button__container {
+        padding-top: 20px;
+
+        .btn.btn-primary {
+          width: 100%;
+          height: 35px;
+          color: white;
+          background-color: #006ce1;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+          border: none;
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}

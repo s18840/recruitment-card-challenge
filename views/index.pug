@@ -1,23 +1,79 @@
 extends defaults/layout.pug
 include defaults/mixins.pug
+
 block content
     .container
         .card__preview
-            .card__preview--number XXXX XXXX XXXX XXXX
-            .card__preview--holder Jan Kowalski
-        form.card__form
-            input.card__form--input(type="text" placeholder="Card number")
-            label(for="card__form--select")
-            select#card__form--select
-                option 01
-                option 02
-                option 03
-                option 04
-                option 05
-                option 06
-                option 07
-                option 08
-                option 09
-                option 10
-                option 11
-                option 12
+            .card__preview__front
+                .background__image__container
+                    img(src="./images/background.jpg", alt="background", class="background")
+                .card__content
+                    .card__content__images__container
+                        img(src="./images/chip.png", alt="chip", class="chip")
+                        img(src="./images/discover-logo.png", alt="discover", class="logo", id="discover")
+                        img(src="./images/visa.png", alt="visa", class="logo", id="visa")
+                        img(src="./images/mastercard.png", alt="mastercard", class="logo", id="mastercard")
+                    .card__preview__number#cardNumberPreview
+                    .card__preview__details__container
+                        .card__preview__details__holder#cardPreviewDetailsHolder
+                            .card__preview__details.holder Card Holder
+                            .card__preview__holder#cardHolderPreview
+                        .card__preview__details__expiration#cardPreviewDetailsExpiration
+                            .card__preview__details.date Expires:
+                            .card__expiration__date#cardExpirationDatePreview
+                                span.expiration__month#expirationMonth
+                                | /
+                                span.expiration__year#expirationYear
+            .card__preview__back
+                .back__content
+                    .background__image__container
+                        img(src="./images/background.jpg", alt="background", class="background")
+                    .strip
+                    .cvv__container
+                        span.cvv__span(label) CVV
+                        .cvv__preview__container
+                            .cvv__preview#cvvPreview
+                    .card__content__images__container
+                        img(src="./images/discover-logo.png", alt="discover", class="logo", id="discoverBack")
+                        img(src="./images/visa.png", alt="visa", class="logo", id="visaBack")
+                        img(src="./images/mastercard.png", alt="mastercard", class="logo", id="mastercardBack")
+        .card__container
+            form.card__form
+                .card__form__title Card Number
+                input#cardNumberInput.card__form--input(type="text", maxlength="19")
+                .card__form__title Card Name
+                input#cardHolderInput.card__form__owner--input(type="text")
+                .card__details
+                    .card__details__container
+                        .card__details__month Expiration Date
+                            label(for="card__form__month__select")
+                            select#card__form__month__select
+                                option(value="", disabled=true, selected=true) Month
+                                option(value="01") 01
+                                option(value="02") 02
+                                option(value="03") 03
+                                option(value="04") 04
+                                option(value="05") 05
+                                option(value="06") 06
+                                option(value="07") 07
+                                option(value="08") 08
+                                option(value="09") 09
+                                option(value="10") 10
+                                option(value="11") 11
+                                option(value="12") 12
+                        .card__details__year
+                            label(for="card__form__year__select")
+                            select#card__form__year__select
+                                option(value="", disabled=true, selected=true) Year
+                                option(value="2024") 2024
+                                option(value="2025") 2025
+                                option(value="2026") 2026
+                                option(value="2027") 2027
+                                option(value="2028") 2028
+                                option(value="2029") 2029
+                                option(value="2030") 2030
+                                option(value="2031") 2031
+                        .card__details__cvv CVV
+                                input.card__form__cvv--input(type="text", maxlength="3")
+                .button__container
+                    button.btn.btn-primary(type="submit") Submit
