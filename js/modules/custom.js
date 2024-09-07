@@ -103,10 +103,16 @@ export default function () {
       hideLogo(mastercardLogoBack);
       hideLogo(discoverLogoBack);
     } else if (inputValue.startsWith("5") || inputValue.startsWith("2")) {
+      hideLogo(visaLogo);
+      showLogo(mastercardLogo);
+      hideLogo(discoverLogo);
       showLogo(mastercardLogoBack);
       hideLogo(visaLogoBack);
       hideLogo(discoverLogoBack);
     } else if (inputValue.startsWith("6")) {
+      hideLogo(visaLogo);
+      hideLogo(mastercardLogo);
+      showLogo(discoverLogo);
       showLogo(discoverLogoBack);
       hideLogo(visaLogoBack);
       hideLogo(mastercardLogoBack);
