@@ -6,16 +6,12 @@ export default function () {
   const visaLogo = document.getElementById("visa");
   const mastercardLogo = document.getElementById("mastercard");
   const discoverLogo = document.getElementById("discover");
-  const monthSelect = document.getElementById("card__form__month__select");
-  const yearSelect = document.getElementById("card__form__year__select");
+  const monthSelect = document.getElementById("cardFormMonthSelect");
+  const yearSelect = document.getElementById("cardFormYearSelect");
   const expirationMonthPreview = document.getElementById("expirationMonth");
   const expirationYearPreview = document.getElementById("expirationYear");
-  const expirationDatePreview = document.getElementById(
-    "cardPreviewDetailsExpiration"
-  );
-  const cardPreviewDetailsHolder = document.getElementById(
-    "cardPreviewDetailsHolder"
-  );
+  const expirationDatePreview = document.getElementById("cardPreviewDetailsExpiration");
+  const cardPreviewDetailsHolder = document.getElementById("cardPreviewDetailsHolder");
   const cardPreview = document.querySelector(".card__preview");
   const cardCvvInput = document.querySelector(".card__form__cvv--input");
   const cvvPreview = document.getElementById("cvvPreview");
@@ -23,30 +19,68 @@ export default function () {
   const mastercardLogoBack = document.getElementById("mastercardBack");
   const discoverLogoBack = document.getElementById("discoverBack");
 
-  cardCvvInput.addEventListener("focus", () => {
-    cardPreview.classList.add("flipped");
-    cvvPreview.textContent = cardCvvInput.value;
-  });
-
-  cardCvvInput.addEventListener("blur", () => {
-    cardPreview.classList.remove("flipped");
-  });
-
-  cardCvvInput.addEventListener("input", () => {
-    cvvPreview.textContent = cardCvvInput.value;
-  });
-
+  let previousValue = "";
   expirationMonthPreview.textContent = "MM";
   expirationYearPreview.textContent = "YY";
   cardOwnerPreview.textContent = "Name Surname";
-
   let cardDigits = Array(16).fill("#");
   cardNumberPreview.innerHTML = formatCardPreview(cardDigits);
   let previousLength = 0;
 
-  cardNumberInput.addEventListener("input", () => {
-    let inputValue = cardNumberInput.value.replace(/\D/g, "");
+  addEventListeners();
 
+  // Add Event Listeners
+  function addEventListeners() {
+    cardCvvInput.addEventListener("focus", handleCvvFocus);
+    cardCvvInput.addEventListener("blur", handleCvvBlur);
+    cardCvvInput.addEventListener("input", handleCvvInput);
+
+    cardNumberInput.addEventListener("input", handleCardNumberInput);
+    cardOwnerInput.addEventListener("input", handleCardOwnerInput);
+
+    monthSelect.addEventListener("change", handleMonthChange);
+    yearSelect.addEventListener("change", handleYearChange);
+
+    addBorderActive(cardNumberInput, cardNumberPreview);
+    addBorderActive(cardOwnerInput, cardPreviewDetailsHolder);
+    addBorderActive(monthSelect, expirationDatePreview);
+    addBorderActive(yearSelect, expirationDatePreview);
+  }
+
+  // Remove Event Listeners
+  function removeEventListeners() {
+    cardCvvInput.removeEventListener("focus", handleCvvFocus);
+    cardCvvInput.removeEventListener("blur", handleCvvBlur);
+    cardCvvInput.removeEventListener("input", handleCvvInput);
+
+    cardNumberInput.removeEventListener("input", handleCardNumberInput);
+    cardOwnerInput.removeEventListener("input", handleCardOwnerInput);
+
+    monthSelect.removeEventListener("change", handleMonthChange);
+    yearSelect.removeEventListener("change", handleYearChange);
+
+    removeBorderActive(cardNumberInput, cardNumberPreview);
+    removeBorderActive(cardOwnerInput, cardPreviewDetailsHolder);
+    removeBorderActive(monthSelect, expirationDatePreview);
+    removeBorderActive(yearSelect, expirationDatePreview);
+  }
+
+  // Event Handlers
+  function handleCvvFocus() {
+    cardPreview.classList.add("flipped");
+    cvvPreview.textContent = cardCvvInput.value;
+  }
+
+  function handleCvvBlur() {
+    cardPreview.classList.remove("flipped");
+  }
+
+  function handleCvvInput() {
+    cvvPreview.textContent = cardCvvInput.value;
+  }
+
+  function handleCardNumberInput() {
+    let inputValue = cardNumberInput.value.replace(/\D/g, "");
     if (inputValue.length > 16) {
       inputValue = inputValue.substring(0, 16);
     }
@@ -117,7 +151,30 @@ export default function () {
       hideLogo(visaLogoBack);
       hideLogo(mastercardLogoBack);
     }
-  });
+  }
+
+  function handleCardOwnerInput() {
+    let currentValue = cardOwnerInput.value.replace(/[^a-zA-Z\s]/g, "");
+    let formattedValue = currentValue
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+
+    cardOwnerInput.value = formattedValue;
+
+    let changedCharIndex = findChangedIndex(previousValue, currentValue);
+    updateOwnerPreview(currentValue, changedCharIndex);
+
+    previousValue = currentValue;
+  }
+
+  function handleMonthChange() {
+    updateExpiration("month");
+  }
+
+  function handleYearChange() {
+    updateExpiration("year");
+  }
 
   function showLogo(logo) {
     logo.classList.remove("logo-disappear");
@@ -128,8 +185,6 @@ export default function () {
   function hideLogo(logo) {
     logo.classList.remove("logo-appear");
     logo.classList.add("logo-disappear");
-
-    logo.style.display = "none";
   }
 
   function formatCardPreview(cardDigits) {
@@ -147,33 +202,13 @@ export default function () {
       .join("");
   }
 
-  let previousValue = "";
-
-  cardOwnerInput.addEventListener("input", () => {
-    let currentValue = cardOwnerInput.value.replace(/[^a-zA-Z\s]/g, "");
-
-    let formattedValue = currentValue
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
-
-    cardOwnerInput.value = formattedValue;
-
-    let changedCharIndex = findChangedIndex(previousValue, currentValue);
-    updateOwnerPreview(currentValue, changedCharIndex);
-
-    previousValue = currentValue;
-  });
-
   function findChangedIndex(previous, current) {
     let minLength = Math.min(previous.length, current.length);
-
     for (let i = 0; i < minLength; i++) {
       if (previous[i] !== current[i]) {
         return i;
       }
     }
-
     return current.length > previous.length
       ? current.length - 1
       : previous.length;
@@ -181,17 +216,13 @@ export default function () {
 
   function updateOwnerPreview(name, changedIndex) {
     cardOwnerPreview.innerHTML = "";
-
     name.split("").forEach((char, index) => {
       const span = document.createElement("span");
       span.classList.add("letter");
-
       span.textContent = char === " " ? "\u00A0" : char;
-
       if (index === changedIndex) {
         span.classList.add("animate");
       }
-
       cardOwnerPreview.appendChild(span);
     });
   }
@@ -205,40 +236,38 @@ export default function () {
         : selectedValue
         ? selectedValue.slice(-2)
         : "YY";
-
     const previewElement =
       type === "month" ? expirationMonthPreview : expirationYearPreview;
 
     previewElement.classList.add("animate-disappear");
-
     previewElement.addEventListener("animationend", () => {
       previewElement.textContent = formattedValue;
       previewElement.classList.remove("animate-disappear");
       previewElement.classList.add("animate-appear");
     });
-
     previewElement.addEventListener("animationend", () => {
       previewElement.classList.remove("animate-appear");
     });
-
     previewElement.textContent = `${formattedValue}`;
   }
-
-  monthSelect.addEventListener("change", () => updateExpiration("month"));
-  yearSelect.addEventListener("change", () => updateExpiration("year"));
 
   function addBorderActive(element, previewElement) {
     element.addEventListener("focus", () => {
       previewElement.classList.add("border-active");
     });
-
     element.addEventListener("blur", () => {
       previewElement.classList.remove("border-active");
     });
   }
 
-  addBorderActive(cardNumberInput, cardNumberPreview);
-  addBorderActive(cardOwnerInput, cardPreviewDetailsHolder);
-  addBorderActive(monthSelect, expirationDatePreview);
-  addBorderActive(yearSelect, expirationDatePreview);
+  function removeBorderActive(element, previewElement) {
+    element.removeEventListener("focus", () => {
+      previewElement.classList.add("border-active");
+    });
+    element.removeEventListener("blur", () => {
+      previewElement.classList.remove("border-active");
+    });
+  }
+
+  return removeEventListeners;
 }

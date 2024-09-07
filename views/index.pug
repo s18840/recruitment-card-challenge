@@ -46,8 +46,8 @@ block content
                 .card__details
                     .card__details__container
                         .card__details__month Expiration Date
-                            label(for="card__form__month__select")
-                            select#card__form__month__select
+                            label(for="cardFormMonthSelect")
+                            select#cardFormMonthSelect
                                 option(value="", disabled=true, selected=true) Month
                                 option(value="01") 01
                                 option(value="02") 02
@@ -62,8 +62,8 @@ block content
                                 option(value="11") 11
                                 option(value="12") 12
                         .card__details__year
-                            label(for="card__form__year__select")
-                            select#card__form__year__select
+                            label(for="cardFormYearSelect")
+                            select#cardFormYearSelect
                                 option(value="", disabled=true, selected=true) Year
                                 option(value="2024") 2024
                                 option(value="2025") 2025
@@ -74,6 +74,6 @@ block content
                                 option(value="2030") 2030
                                 option(value="2031") 2031
                         .card__details__cvv CVV
-                                input.card__form__cvv--input(type="text", maxlength="3")
+                                input.card__form__cvv--input(type="text", maxlength="4")
                 .button__container
                     button.btn.btn-primary(type="submit") Submit
