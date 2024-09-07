@@ -18,6 +18,7 @@ export default function () {
   const visaLogoBack = document.getElementById("visaBack");
   const mastercardLogoBack = document.getElementById("mastercardBack");
   const discoverLogoBack = document.getElementById("discoverBack");
+  const form = document.getElementById("cardForm");
 
   let previousValue = "";
   expirationMonthPreview.textContent = "MM";
@@ -31,6 +32,7 @@ export default function () {
 
   // Add Event Listeners
   function addEventListeners() {
+    form.addEventListener("submit", handleFormSubmit);
     cardCvvInput.addEventListener("focus", handleCvvFocus);
     cardCvvInput.addEventListener("blur", handleCvvBlur);
     cardCvvInput.addEventListener("input", handleCvvInput);
@@ -65,6 +67,38 @@ export default function () {
     removeBorderActive(yearSelect, expirationDatePreview);
   }
 
+  function handleFormSubmit(event) {
+    event.preventDefault();
+
+    const cardNumber = cardNumberInput.value;
+    const cardHolder = cardOwnerInput.value;
+    const cardMonth = monthSelect.value;
+    const cardYear = yearSelect.value;
+    const cardCvv = cardCvvInput.value;
+
+    if (
+      cardNumber.length !== 16 ||
+      !cardHolder ||
+      !cardMonth ||
+      !cardYear ||
+      !cardCvv
+    ) {
+      alert(
+        "Please ensure all fields are filled correctly and the card number has exactly 16 digits."
+      );
+      return;
+    }
+
+    console.log("Form Submitted!", {
+      cardNumber,
+      cardHolder,
+      expirationDate: `${cardMonth}/${cardYear}`,
+      cardCvv,
+    });
+
+    // form.submit();
+  }
+
   // Event Handlers
   function handleCvvFocus() {
     cardPreview.classList.add("flipped");
@@ -76,24 +110,52 @@ export default function () {
   }
 
   function handleCvvInput() {
+    let inputValue = cardCvvInput.value;
+
+    const cleanedValue = inputValue.replace(/\D/g, "");
+
+    if (inputValue !== cleanedValue) {
+      alert("Only digits are allowed in the CVV.");
+      cardCvvInput.value = cleanedValue;
+      return;
+    }
+
+    if (cleanedValue.length > 4) {
+      cardCvvInput.value = cleanedValue.substring(0, 4);
+    } else {
+      cardCvvInput.value = cleanedValue;
+    }
+
     cvvPreview.textContent = cardCvvInput.value;
   }
 
   function handleCardNumberInput() {
-    let inputValue = cardNumberInput.value.replace(/\D/g, "");
-    if (inputValue.length > 16) {
-      inputValue = inputValue.substring(0, 16);
+    let inputValue = cardNumberInput.value;
+
+    let cleanedValue = inputValue.replace(/\s+/g, "");
+
+    if (/\D/.test(cleanedValue)) {
+      alert("Only digits are allowed in the card number.");
+      cleanedValue = cleanedValue.replace(/\D/g, "");
     }
+
+    if (cleanedValue.length > 16) {
+      cleanedValue = cleanedValue.substring(0, 16);
+    }
+
+    const formattedValue = formatCardNumber(cleanedValue);
+
+    cardNumberInput.value = formattedValue;
 
     let newDigits = [];
     for (let i = 0; i < 16; i++) {
-      if (i < inputValue.length) {
+      if (i < cleanedValue.length) {
         newDigits.push({
-          digit: inputValue[i],
+          digit: cleanedValue[i],
           animate: cardDigits[i] === "#",
           type: "number",
         });
-        cardDigits[i] = inputValue[i];
+        cardDigits[i] = cleanedValue[i];
       } else {
         newDigits.push({
           digit: "#",
@@ -127,23 +189,23 @@ export default function () {
       });
     });
 
-    previousLength = inputValue.length;
+    previousLength = cleanedValue.length;
 
-    if (inputValue.startsWith("4")) {
+    if (cleanedValue.startsWith("4")) {
       showLogo(visaLogo);
       hideLogo(mastercardLogo);
       hideLogo(discoverLogo);
       showLogo(visaLogoBack);
       hideLogo(mastercardLogoBack);
       hideLogo(discoverLogoBack);
-    } else if (inputValue.startsWith("5") || inputValue.startsWith("2")) {
+    } else if (cleanedValue.startsWith("5") || cleanedValue.startsWith("2")) {
       hideLogo(visaLogo);
       showLogo(mastercardLogo);
       hideLogo(discoverLogo);
       showLogo(mastercardLogoBack);
       hideLogo(visaLogoBack);
       hideLogo(discoverLogoBack);
-    } else if (inputValue.startsWith("6")) {
+    } else if (cleanedValue.startsWith("6")) {
       hideLogo(visaLogo);
       hideLogo(mastercardLogo);
       showLogo(discoverLogo);
@@ -153,8 +215,27 @@ export default function () {
     }
   }
 
+  // Helper function to format card number with spaces every 4 digits
+  function formatCardNumber(value) {
+    return value
+      .split("")
+      .map((digit, index) =>
+        index > 0 && index % 4 === 0 ? " " + digit : digit
+      )
+      .join("");
+  }
+
   function handleCardOwnerInput() {
-    let currentValue = cardOwnerInput.value.replace(/[^a-zA-Z\s]/g, "");
+    let currentValue = cardOwnerInput.value;
+
+    if (/\d/.test(currentValue) || /[^a-zA-Z\s]/.test(currentValue)) {
+      alert(
+        "Numbers and special characters are not allowed in the card holder's name."
+      );
+      cardOwnerInput.value = previousValue;
+      return;
+    }
+
     let formattedValue = currentValue
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
@@ -163,9 +244,9 @@ export default function () {
     cardOwnerInput.value = formattedValue;
 
     let changedCharIndex = findChangedIndex(previousValue, currentValue);
-    updateOwnerPreview(currentValue, changedCharIndex);
+    updateOwnerPreview(formattedValue, changedCharIndex);
 
-    previousValue = currentValue;
+    previousValue = formattedValue;
   }
 
   function handleMonthChange() {
